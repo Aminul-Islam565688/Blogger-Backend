@@ -70,6 +70,14 @@ client.connect(err => {
             })
     })
 
+    // for Deleteing the Specific Blogs
+    app.delete('/deleteblog/:id', (req, res) => {
+        BlogCollection.deleteOne({ "_id": ObjectId(req.param.id) })
+            .then((err, result) => {
+                res.send(err.deleteCount > 0);
+            })
+    })
+
 
     console.log('MongoDB is Connected');
 });
