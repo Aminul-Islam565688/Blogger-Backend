@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(fileUpload())
 
-const port = 4564
+const port = process.env.PORT || 4564
 
 
 const uri = "mongodb+srv://test:test@cluster0.aifw0.mongodb.net/Blogger?retryWrites=true&w=majority";
