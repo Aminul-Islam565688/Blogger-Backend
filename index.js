@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { MongoClient, ObjectID, ObjectId } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const fileUpload = require('express-fileupload')
 const app = express()
 
@@ -61,8 +61,9 @@ client.connect(err => {
     })
 
     // for Specific Blogs Data
-    app.get('/blog/:id', (req, res) => {
+    app.get('/fullblog/:id', (req, res) => {
         const id = req.params.id;
+        console.log(id);
         BlogCollection.find({ "_id": ObjectId(id) })
             .toArray((err, document) => {
                 res.send(document);
