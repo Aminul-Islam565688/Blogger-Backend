@@ -1,7 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { MongoClient, ObjectId } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
+const MongoClient = require('mongodb').MongoClient;
 const fileUpload = require('express-fileupload')
 const app = express()
 
@@ -16,15 +17,15 @@ const port = process.env.PORT || 4564
 const uri = "mongodb+srv://test:test@cluster0.aifw0.mongodb.net/Blogger?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
-    const collection = client.db("Blogger").collection("Admin");
-    const BlogCollection = client.db("Blogger").collection("Blogs");
+    const adminCollection = client.db("Blogger").collection("Admin");
+    const blogCollection = client.db("Blogger").collection("Blogs");
     // perform actions on the collection object
 
     // for Login
     app.post('/login', (req, res) => {
         const adminEmail = req.body.email;
         const adminPassword = req.body.password;
-        collection.find({ email: adminEmail, password: adminPassword })
+        adminCollection.find({ email: adminEmail, password: adminPassword })
             .toArray((err, document) => {
                 res.send(document)
             })
@@ -45,7 +46,7 @@ client.connect(err => {
             img: Buffer.from(encImg, 'base64')
         }
 
-        BlogCollection.insertOne({ image, title, content })
+        blogCollection.insertOne({ image, title, content })
             .then((result) => {
                 res.send(result.insertedCount > 0)
             })
@@ -54,7 +55,7 @@ client.connect(err => {
 
     // for Get all Blogs
     app.get('/allblogs', (req, res) => {
-        BlogCollection.find({})
+        blogCollection.find({})
             .toArray((err, document) => {
                 res.send(document)
             })
@@ -63,8 +64,7 @@ client.connect(err => {
     // for Specific Blogs Data
     app.get('/fullblog/:id', (req, res) => {
         const id = req.params.id;
-        console.log(id);
-        BlogCollection.find({ "_id": ObjectId(id) })
+        blogCollection.find({ "_id": ObjectId(id) })
             .toArray((err, document) => {
                 res.send(document);
             })
@@ -72,10 +72,12 @@ client.connect(err => {
 
     // for Deleteing the Specific Blogs
     app.delete('/deleteblog/:id', (req, res) => {
-        BlogCollection.deleteOne({ "_id": ObjectId(req.param.id) })
+        const id = req.params.id;
+        console.log(id);
+        blogCollection.deleteOne({ "_id ": ObjectId(id) })
             .then((err, result) => {
                 res.send(err.deleteCount > 0);
-            })
+            });
     })
 
 
