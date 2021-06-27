@@ -71,12 +71,15 @@ client.connect(err => {
     })
 
     // for Deleteing the Specific Blogs
-    app.delete('/deleteblog/:id', (req, res) => {
-        const id = req.params.id;
-        console.log(id);
-        blogCollection.deleteOne({ "_id ": ObjectId(id) })
-            .then((err, result) => {
-                res.send(err.deleteCount > 0);
+    app.delete('/deleteblog/:_id', (req, res) => {
+        const _id = ObjectId(req.params._id);
+        console.log(_id);
+        blogCollection
+            .deleteOne({
+                _id: _id
+            })
+            .then((result) => {
+                res.send(result.deletedCount > 0);
             });
     })
 
